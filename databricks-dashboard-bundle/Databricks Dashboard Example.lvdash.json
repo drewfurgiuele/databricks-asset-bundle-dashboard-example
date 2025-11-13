@@ -1,0 +1,343 @@
+{
+  "datasets": [
+    {
+      "name": "256e14bd",
+      "displayName": "customer",
+      "queryLines": [
+        "SELECT * FROM external_catalog.tpch.customer"
+      ]
+    },
+    {
+      "name": "218e0d22",
+      "displayName": "lineitem",
+      "queryLines": [
+        "SELECT * FROM external_catalog.tpch.lineitem"
+      ]
+    },
+    {
+      "name": "125b7de3",
+      "displayName": "nation",
+      "queryLines": [
+        "SELECT * FROM external_catalog.tpch.nation"
+      ]
+    },
+    {
+      "name": "fee20387",
+      "displayName": "orders",
+      "queryLines": [
+        "SELECT * FROM external_catalog.tpch.orders"
+      ]
+    },
+    {
+      "name": "8ca7457c",
+      "displayName": "part",
+      "queryLines": [
+        "SELECT * FROM external_catalog.tpch.part"
+      ]
+    },
+    {
+      "name": "796a12d2",
+      "displayName": "partsupp",
+      "queryLines": [
+        "SELECT * FROM external_catalog.tpch.partsupp"
+      ]
+    },
+    {
+      "name": "e96f85eb",
+      "displayName": "region",
+      "queryLines": [
+        "SELECT * FROM external_catalog.tpch.region"
+      ]
+    },
+    {
+      "name": "d0131d73",
+      "displayName": "supplier",
+      "queryLines": [
+        "SELECT * FROM external_catalog.tpch.supplier"
+      ]
+    },
+    {
+      "name": "8d24bf65",
+      "displayName": "TotalSalesByNation",
+      "queryLines": [
+        "SELECT sum(o.o_totalprice) as NationTotalSales, n.n_name as Nation from orders o\n",
+        "INNER JOIN customer c ON o.o_custkey = c.c_custkey\n",
+        "INNER JOIN nation n on n.n_nationkey = c.c_nationkey\n",
+        "WHERE o.o_orderdate BETWEEN :date_param_from AND :date_param_to\n",
+        "GROUP BY n.n_name\n",
+        "ORDER BY NationTotalSales DESC\n"
+      ],
+      "parameters": [
+        {
+          "displayName": "date_param_from",
+          "keyword": "date_param_from",
+          "dataType": "DATE",
+          "defaultSelection": {}
+        },
+        {
+          "displayName": "date_param_to",
+          "keyword": "date_param_to",
+          "dataType": "DATE",
+          "defaultSelection": {}
+        }
+      ],
+      "catalog": "external_catalog",
+      "schema": "tpch"
+    }
+  ],
+  "pages": [
+    {
+      "name": "1c2803ab",
+      "displayName": "Sales Performance",
+      "layout": [
+        {
+          "widget": {
+            "name": "total-sales-by-state",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "8d24bf65",
+                  "fields": [
+                    {
+                      "name": "Nation",
+                      "expression": "`Nation`"
+                    },
+                    {
+                      "name": "sum(NationTotalSales)",
+                      "expression": "SUM(`NationTotalSales`)"
+                    }
+                  ],
+                  "parameterValues": [
+                    {
+                      "keyword": "date_param_from",
+                      "selection": {}
+                    },
+                    {
+                      "keyword": "date_param_to",
+                      "selection": {}
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Nation",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(NationTotalSales)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "label": {
+                  "show": false
+                }
+              },
+              "frame": {
+                "title": "Total sales by state",
+                "showTitle": true,
+                "showDescription": false
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 3,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    },
+    {
+      "name": "871fdc0b",
+      "displayName": "Customer Demographics",
+      "layout": [
+        {
+          "widget": {
+            "name": "total-customer-market-segment",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "256e14bd",
+                  "fields": [
+                    {
+                      "name": "c_mktsegment",
+                      "expression": "`c_mktsegment`"
+                    },
+                    {
+                      "name": "count(*)",
+                      "expression": "COUNT(`*`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "c_mktsegment",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "count(*)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Total Customer By Market Segment"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 3,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    },
+    {
+      "name": "db55f67e",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "sales-from",
+            "queries": [
+              {
+                "name": "parameter_dashboards/01f0c0af8bd01c68b46ef38be9521ca8/datasets/01f0c0affbbf1f73931b86dde470e664_date_param_from",
+                "query": {
+                  "datasetName": "8d24bf65",
+                  "parameters": [
+                    {
+                      "name": "date_param_from",
+                      "keyword": "date_param_from"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-date-picker",
+              "encodings": {
+                "fields": [
+                  {
+                    "parameterName": "date_param_from",
+                    "queryName": "parameter_dashboards/01f0c0af8bd01c68b46ef38be9521ca8/datasets/01f0c0affbbf1f73931b86dde470e664_date_param_from"
+                  }
+                ]
+              },
+              "selection": {
+                "defaultSelection": {
+                  "values": {
+                    "dataType": "DATE",
+                    "values": [
+                      {
+                        "value": "1979-12-30T00:00:00.000"
+                      }
+                    ]
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Sales From"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "sales-to",
+            "queries": [
+              {
+                "name": "parameter_dashboards/01f0c0af8bd01c68b46ef38be9521ca8/datasets/01f0c0affbbf1f73931b86dde470e664_date_param_to",
+                "query": {
+                  "datasetName": "8d24bf65",
+                  "parameters": [
+                    {
+                      "name": "date_param_to",
+                      "keyword": "date_param_to"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-date-picker",
+              "encodings": {
+                "fields": [
+                  {
+                    "parameterName": "date_param_to",
+                    "queryName": "parameter_dashboards/01f0c0af8bd01c68b46ef38be9521ca8/datasets/01f0c0affbbf1f73931b86dde470e664_date_param_to"
+                  }
+                ]
+              },
+              "selection": {
+                "defaultSelection": {
+                  "values": {
+                    "dataType": "DATE",
+                    "values": [
+                      {
+                        "value": "now/d"
+                      }
+                    ]
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Sales To"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
