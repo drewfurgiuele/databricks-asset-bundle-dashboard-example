@@ -30,7 +30,8 @@ targets:
     mode: production
     workspace:
       host: https://adb-3436974546539940.0.azuredatabricks.net
-      root_path: /Workspace/Dashboards
+      root_path: /Workspace/
+      resource_path: /Workspace/Dashboards
     variables:
        warehouse_id: 0ae2260dc85baccc
     run_as:
